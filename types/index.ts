@@ -1,4 +1,5 @@
-import { MouseEventHandler } from "react";
+import React, { MouseEventHandler } from "react";
+import { IconType } from "react-icons";
 
 export interface CustomButtonProps {
   title: string;
@@ -7,7 +8,8 @@ export interface CustomButtonProps {
   btnType?: "button" | "submit";
   textStyles?: string;
   rightIcon?: string;
-  isDisabled?: boolean;
+  disabled?: boolean;
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export interface SearchManuProps {
@@ -57,4 +59,26 @@ export interface ShowMoreProps {
 
 export interface HomeProps {
   searchParams: FilterProps;
+}
+
+export interface ModalProps {
+  isOpen?: boolean;
+  onClose: () => void;
+  onSubmit: () => void;
+  title?: string;
+  body?: React.ReactElement;
+  footer?: React.ReactElement;
+  ActionLabel?: string;
+  disabled?: boolean;
+  secondaryAction?: () => void;
+  secondaryActionLabel?: string;
+}
+
+export interface ButtonTwoProps {
+  label?: string;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  disabled?: boolean;
+  outline?: boolean;
+  small?: boolean;
+  icon?: IconType;
 }
