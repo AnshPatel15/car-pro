@@ -3,9 +3,10 @@
 import Image from "next/image";
 import { CarCard, CustomFilter, Hero, SearchBar, ShowMore } from "@/components";
 import { fuels, yearsOfProduction } from "@/constants";
-import { HomeProps } from "@/types";
+
 import { fetchCars } from "@/utils";
 import { useEffect, useState } from "react";
+import EmptyState from "@/components/EmptyState";
 
 export default function Home() {
   const [allCars, setAllCars] = useState([]);
@@ -18,6 +19,14 @@ export default function Home() {
   const [year, setYear] = useState(2022);
 
   const [limit, setLimit] = useState(10);
+
+  const [selected, setSelected] = useState([0]);
+
+  const handleRemoveFilters = () => {
+    setManufacturer("");
+    setModel("");
+    setSelected([0]);
+  };
 
   const getCars = async () => {
     try {
@@ -94,7 +103,9 @@ export default function Home() {
           </section>
         ) : (
           <div className="home__error-container">
-            <h2 className="text-black text-xl font-bold">Oops, no results</h2>
+            <h2 className="text-black text-xl font-bold">
+              <EmptyState showReset onRemoveFilters={handleRemoveFilters} />
+            </h2>
             <p>{allCars}</p>
           </div>
         )}

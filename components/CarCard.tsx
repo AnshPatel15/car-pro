@@ -3,6 +3,7 @@ import { CarProps } from "@/types";
 import { calculateCarRent, generateCarImageUrl } from "@/utils";
 import Image from "next/image";
 import { useState } from "react";
+import { BiRupee } from "react-icons/bi";
 import CarDetails from "./CarDetails";
 import CustomButton from "./CustomButton";
 
@@ -25,7 +26,9 @@ export const CarCard = ({ car }: CarCardProps) => {
         </h2>
       </div>
       <p className="flex mt-6 text-[32px] font-extrabold">
-        <span className=" self-start text-[14px] font-semibold">Rs </span>
+        <span className=" self-start text-[14px] font-semibold">
+          <BiRupee size={25} />{" "}
+        </span>
         {carRent}
         <span className=" self-end text-[14px] font-medium">/day</span>
       </p>
@@ -69,6 +72,7 @@ export const CarCard = ({ car }: CarCardProps) => {
             textStyles="text-white text-[14px] leading-[17px] font-bold"
             rightIcon="/right-arrow.svg"
             handleClick={() => setIsOpen(true)}
+            onClick={() => {}}
           />
         </div>
       </div>

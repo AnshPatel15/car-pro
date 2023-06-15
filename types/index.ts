@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from "react";
+import React, { Dispatch, MouseEventHandler, SetStateAction } from "react";
 import { IconType } from "react-icons";
 
 export interface CustomButtonProps {
@@ -13,8 +13,10 @@ export interface CustomButtonProps {
 }
 
 export interface SearchManuProps {
-  manufacturer: string;
-  setManuFacturer: (manufacturer: string) => void;
+  // manufacturer: string;
+  // setManuFacturer: (manufacturer: string) => void;
+  selected: string;
+  setSelected: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface CarProps {
@@ -81,4 +83,9 @@ export interface ButtonTwoProps {
   outline?: boolean;
   small?: boolean;
   icon?: IconType;
+}
+
+export interface SearchBarProps {
+  setManufacturer: Dispatch<SetStateAction<string>>;
+  setModel: Dispatch<SetStateAction<string>>;
 }

@@ -1,4 +1,7 @@
 import { Footer, Navbar } from "@/components";
+import ClientOnly from "@/components/ClientOnly";
+
+import RegisterModal from "@/components/modals/registerModal";
 import "./globals.css";
 
 export const metadata = {
@@ -14,7 +17,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="relative">
-        <Navbar />
+        <ClientOnly>
+          <RegisterModal />
+          <Navbar />
+        </ClientOnly>
+
         {children}
         <Footer />
       </body>

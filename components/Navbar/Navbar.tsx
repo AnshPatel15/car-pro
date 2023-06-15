@@ -2,7 +2,8 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import CustomButton from "./CustomButton";
+import CustomButton from "../CustomButton";
+import UserMenu from "./UserMenu";
 
 const Navbar = () => {
   return (
@@ -19,11 +20,13 @@ const Navbar = () => {
             />
           </Link>
 
-          <CustomButton
+          {/* <CustomButton
             title="Sign In"
             btnType="button"
             containerStyles="text-primary-blue rounded-full bg-white min-w-[130px]"
-          />
+            onClick={() => {}}
+          /> */}
+          <UserMenu />
         </nav>
       </header>
     </div>
