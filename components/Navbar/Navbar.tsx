@@ -1,11 +1,17 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
+import { User } from "@prisma/client";
 
 import CustomButton from "../CustomButton";
 import UserMenu from "./UserMenu";
+import React from "react";
 
-const Navbar = () => {
+interface NavbarProps {
+  currentUser?: User | null;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
   return (
     <div>
       <header className=" w-full absolute z-10">
@@ -26,7 +32,7 @@ const Navbar = () => {
             containerStyles="text-primary-blue rounded-full bg-white min-w-[130px]"
             onClick={() => {}}
           /> */}
-          <UserMenu />
+          <UserMenu currentUser={currentUser} />
         </nav>
       </header>
     </div>
