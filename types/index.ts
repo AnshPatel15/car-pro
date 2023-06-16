@@ -20,6 +20,8 @@ export interface SearchManuProps {
 }
 
 export interface CarProps {
+  id: number;
+  car_id: number;
   city_mpg: number;
   class: string;
   combination_mpg: number;
