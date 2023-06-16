@@ -1,4 +1,5 @@
 "use client";
+import useCars from "@/hooks/useCars";
 import { CarProps } from "@/types";
 import { calculateCarRent, generateCarImageUrl } from "@/utils";
 import Image from "next/image";
@@ -21,9 +22,11 @@ export const CarCard = ({ car }: CarCardProps) => {
 
   const carRent = calculateCarRent(city_mpg, year);
 
+  const selectedCarFunction = useCars((state) => state.setSelectedCar);
+
   const handleClick = () => {
-    const carData = encodeURIComponent(JSON.stringify(car));
-    router.push(`/carPage?car=${carData}`);
+    selectedCarFunction(car);
+    router.push(`/carPage?car=1`);
   };
 
   return (
