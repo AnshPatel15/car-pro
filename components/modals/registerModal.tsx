@@ -9,6 +9,8 @@ import useRegisterModal from "@/hooks/useRegisterModal";
 import Modal from "./Modal";
 import ButtonTwo from "../ButtonTwo";
 
+import { signIn } from "next-auth/react";
+
 import React, { useState } from "react";
 
 import Heading from "../Heading";
@@ -84,13 +86,13 @@ const RegisterModal = () => {
         outline
         label="Continue with Google"
         icon={FcGoogle}
-        onClick={() => {}}
+        onClick={() => signIn("google")}
       />
       <ButtonTwo
         outline
         label="Continue with Github"
         icon={AiFillGithub}
-        onClick={() => {}}
+        onClick={() => signIn("github")}
       />
       <div className=" text-neutral-500 text-center mt-4 font-light">
         <div
