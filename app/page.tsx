@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { CarCard, CustomFilter, Hero, SearchBar, ShowMore } from "@/components";
-import { fuels, yearsOfProduction } from "@/constants";
+import { fuels, yearsOfProduction } from "@/app/constants";
 
 import { fetchCars } from "@/utils";
 import { useEffect, useState } from "react";

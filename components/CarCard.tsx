@@ -3,6 +3,7 @@ import { CarProps } from "@/types";
 import { calculateCarRent, generateCarImageUrl } from "@/utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { handleClientScriptLoad } from "next/script";
 import { useState } from "react";
 import { BiRupee } from "react-icons/bi";
 import CarDetails from "./CarDetails";
@@ -19,6 +20,11 @@ export const CarCard = ({ car }: CarCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const carRent = calculateCarRent(city_mpg, year);
+
+  const handleClick = () => {
+    const carData = encodeURIComponent(JSON.stringify(car));
+    router.push(`/carPage?car=${carData}`);
+  };
 
   return (
     <div className="car-card group">
@@ -74,7 +80,8 @@ export const CarCard = ({ car }: CarCardProps) => {
             textStyles="text-white text-[14px] leading-[17px] font-bold"
             rightIcon="/right-arrow.svg"
             // handleClick={() => setIsOpen(true)}
-            handleClick={() => router.push(`/carDetails/${car.id}`)}
+            // handleClick={() => router.push(`/carDetails?carId=${car.car_id}`)}
+            handleClick={handleClick}
             onClick={() => {}}
           />
         </div>
