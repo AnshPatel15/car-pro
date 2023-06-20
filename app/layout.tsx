@@ -1,7 +1,8 @@
-import { Footer, Navbar } from "@/components";
+import { Navbar } from "@/components";
 import ClientOnly from "@/components/ClientOnly";
+import Footer from "@/components/Footer";
 
-import RegisterModal from "../components/modals/RegisterModal";
+import RegisterModal from "@/components/modals/registerModal";
 import ToasterProvider from "@/providers/ToasterProvider";
 import "./globals.css";
 import LoginModal from "@/components/modals/LoginModal";
@@ -22,13 +23,10 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className="relative">
-        <ClientOnly>
-          <ToasterProvider />
-          <LoginModal />
-          <RegisterModal />
-          <Navbar currentUser={currentUser} />
-        </ClientOnly>
-
+        <ToasterProvider />
+        <LoginModal />
+        <RegisterModal />
+        <Navbar currentUser={currentUser} />
         {children}
         <Footer />
       </body>

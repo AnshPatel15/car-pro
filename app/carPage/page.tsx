@@ -1,4 +1,7 @@
 "use client";
+import CarImages from "@/components/carListing/CarImages";
+
+import ClientOnly from "@/components/ClientOnly";
 import useCars from "@/hooks/useCars";
 import { calculateCarRent, generateCarImageUrl } from "@/utils";
 import Image from "next/image";
@@ -7,23 +10,26 @@ function CarPage() {
   const selectedCar = useCars((state) => state.selectedCar);
   const car = selectedCar || {};
   const carRent = calculateCarRent(car.city_mpg, car.year);
+  const imgSrc = generateCarImageUrl(car);
 
   return (
-    <div className="flex items-center justify-center ">
-      <div className=" mx-32 my-44">
-        <h1 className=" text-2xl font-bold capitalize">
-          {car.make} {car.model}
-        </h1>
-        <p className=" text-2xl">Price = {carRent}</p>
-        <Image
-          src={generateCarImageUrl(car)}
-          alt="car model"
-          fill
-          priority
-          className="object-contain"
-        />
+    <main className="box-border">
+      <div className="pt-40 pl-32">
+        <div className="flex flex-row relative">
+          <div className="w-2/5 flex justify-between">
+            <CarImages />
+          </div>
+          <div className="pl-20 flex justify-center whitespace-nowrap text-4xl font-bold capitalize">
+            {car.make} {car.model}
+          </div>
+          <div className="mt-28 flex flex-col">
+            <div className="text-2xl flex flex-col">
+              HELLO<div>Cunt</div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
 
