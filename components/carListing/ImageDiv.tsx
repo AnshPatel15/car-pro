@@ -71,7 +71,7 @@ const ImageDiv = () => {
           <h1 className=" text-3xl font-bold  capitalize p-4">
             {car.make} {car.model}
           </h1>
-          <p className=" text-gray-600 p-3">
+          <p className=" text-gray-600 p-3 text-left">
             Introducing our exceptional collection of vehicles, each offering a
             unique blend of performance, comfort, and style. Whether you're
             looking for elegance and sophistication with the{" "}

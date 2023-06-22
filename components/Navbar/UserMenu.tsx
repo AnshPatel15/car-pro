@@ -28,10 +28,10 @@ const UserMenu = ({ currentUser }: UserMenuProps) => {
       <div className=" flex flex-row items-center gap-3 w-28">
         <div
           onClick={toggleOpen}
-          className=" py-4 md:py-1 md:px-2 border-[1px] border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition -- text-primary-blue bg-white w-20"
+          className=" py-1 px-2 md:py-1 md:px-2 border-[1px] border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition -- text-primary-blue bg-white w-20"
         >
           <AiOutlineMenu />
-          <div className=" hidden md:block">
+          <div className="block md:block">
             <Avatar src={currentUser?.image} />
           </div>
         </div>
