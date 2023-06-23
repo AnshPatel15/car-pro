@@ -1,14 +1,72 @@
+"use client";
+import { getReservations } from "@/app/actions/getReservations";
 import useCars from "@/hooks/useCars";
+import useLoginModal from "@/hooks/useLoginModal";
 import { calculateCarRent, generateCarImageUrl } from "@/utils";
+import { Reservation, User } from "@prisma/client";
+import axios from "axios";
+import { eachDayOfInterval } from "date-fns";
+import { differenceInCalendarDays } from "date-fns";
 import Image from "next/image";
-import { useState } from "react";
-import { BiRupee } from "react-icons/bi";
-import CustomButton from "../CustomButton";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Range } from "react-date-range";
+import { toast } from "react-hot-toast";
+import CarReservation from "./CarReservation";
 
-const ImageDiv = () => {
+interface ImageDivProps {
+  reservations?: Reservation[];
+  currentUser?: User | null;
+}
+
+const initialDateRange = {
+  startDate: new Date(),
+  endDate: new Date(),
+  key: "selection",
+};
+
+const ImageDiv = ({ currentUser, reservations }: ImageDivProps) => {
+  const loginModal = useLoginModal();
+  const router = useRouter();
+
   const selectedCar = useCars((state) => state.selectedCar);
   const car = selectedCar || {};
-  const carRent = calculateCarRent(car.city_mpg, car.year);
+  const carRent: any = calculateCarRent(car.city_mpg, car.year);
+  const originalCarId = car?.carId; // Store the original carId value
+  const formattedCarId = originalCarId ? originalCarId.replace(/-/g, "") : "";
+
+  const restoredCarId = formattedCarId
+    ? formattedCarId.replace(
+        /^(.{8})(.{4})(.{4})(.{4})(.{12})$/,
+        "$1-$2-$3-$4-$5"
+      )
+    : "";
+
+  const disabledDates = useMemo(() => {
+    let dates: Date[] = [];
+
+    reservations?.forEach((reservation) => {
+      if (reservation.carId === formattedCarId) {
+        // Filter reservations based on carId
+        const range = eachDayOfInterval({
+          start: new Date(reservation.startDate),
+          end: new Date(reservation.endDate),
+        });
+
+        dates = [...dates, ...range];
+      }
+    });
+
+    return dates;
+  }, [reservations, formattedCarId]);
+
+  console.log(restoredCarId); // Output the restored carId value
+
+  console.log(car.carId, formattedCarId);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(carRent);
+  const [dateRange, setDateRange] = useState<Range>(initialDateRange);
 
   const [images, setImages] = useState({
     img1: generateCarImageUrl(car),
@@ -18,6 +76,51 @@ const ImageDiv = () => {
   });
 
   const [activeImage, setActiveImage] = useState(images.img1);
+
+  const addCartButton = useCallback(() => {
+    if (!currentUser) {
+      return loginModal.onOpen();
+    }
+
+    // add car to cart
+    setIsLoading(true);
+
+    axios
+      .post("/api/reservations", {
+        totalPrice: parseInt(totalPrice),
+        startDate: dateRange.startDate,
+        endDate: dateRange.endDate,
+        carId: formattedCarId,
+      })
+      .then(() => {
+        toast.success("Car Reserved");
+        setDateRange(initialDateRange);
+        // redirect to my reservations
+        router.refresh();
+      })
+      .catch((error) => {
+        console.error("Error:", error); // Log the error
+        toast.error("Something went wrong.");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [currentUser, loginModal, totalPrice, dateRange, router]);
+
+  useEffect(() => {
+    if (dateRange.startDate && dateRange.endDate) {
+      const dayCount = differenceInCalendarDays(
+        dateRange.endDate,
+        dateRange.startDate
+      );
+
+      if (dayCount && carRent) {
+        setTotalPrice(dayCount * carRent);
+      } else {
+        setTotalPrice(carRent);
+      }
+    }
+  }, [dateRange, carRent]);
 
   return (
     <div className="flex flex-col justify-between lg:flex-row gap-4 md:items-center lg:items-start">
@@ -101,19 +204,17 @@ const ImageDiv = () => {
             with the confidence of our commitment to quality and customer
             satisfaction.
           </p>
-          <h6 className="flex flex-row text-2xl font-semibold pt-2">
-            <BiRupee className="mt-[4px]" size={25} /> {carRent}
-          </h6>
-          <div className=" pt-4">
-            <CustomButton
-              title="Add to Cart"
-              btnType="submit"
-              containerStyles="w-full py-[16px] rounded-full bg-primary-blue"
-              textStyles="text-white text-[14px] leading-[17px] font-bold"
-              handleClick={() => {}}
-              onClick={() => {}}
-            />
-          </div>
+        </div>
+        <div className=" order-first mb-10 md:order-last md:col-span-3">
+          <CarReservation
+            price={carRent}
+            totalPrice={totalPrice}
+            onChangeDate={(value) => setDateRange(value)}
+            dateRange={dateRange}
+            onSubmit={addCartButton}
+            disabled={isLoading}
+            disabledDates={disabledDates}
+          />
         </div>
       </div>
     </div>

@@ -10,7 +10,7 @@ import useRegisterModal from "@/hooks/useRegisterModal";
 import Modal from "./Modal";
 import ButtonTwo from "../ButtonTwo";
 
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import Heading from "../Heading";
 import Input from "../inputs/Input";
@@ -55,6 +55,11 @@ const LoginModal = () => {
     });
   };
 
+  const toggle = useCallback(() => {
+    LoginModal.onClose();
+    registerModal.onOpen();
+  }, [LoginModal, registerModal]);
+
   const bodyContent = (
     <div className=" flex flex-col gap-4">
       <Heading
@@ -97,13 +102,13 @@ const LoginModal = () => {
         onClick={() => signIn("github")}
       />
       <div className=" text-neutral-500 text-center mt-4 font-light">
-        <div
-          onClick={registerModal.onClose}
-          className="flex flex-row items-center gap-2  justify-center"
-        >
-          <div>Already have an account?</div>
-          <div className=" text-neutral-800 cursor-pointer hover:underline">
-            Log in
+        <div className="flex flex-row items-center gap-2  justify-center">
+          <div>First time using CarHub?</div>
+          <div
+            onClick={toggle}
+            className=" text-neutral-800 cursor-pointer hover:underline"
+          >
+            Sign Up
           </div>
         </div>
       </div>

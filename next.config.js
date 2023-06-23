@@ -10,6 +10,15 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  webpack: (config, { isServer }) => {
+    // Add html-loader rule
+    config.module.rules.push({
+      test: /\.html$/,
+      use: "html-loader",
+    });
+
+    return config;
+  },
 };
 
 module.exports = nextConfig;

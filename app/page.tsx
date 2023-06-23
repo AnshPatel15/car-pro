@@ -39,7 +39,13 @@ export default function Home() {
         model: model || "",
       });
 
-      setAllCars(result);
+      // Update the fetched cars to include unique IDs
+      const carsWithIDs = result.map((car: any) => ({
+        id: car.id, // Use the existing ID from the fetched cars
+        ...car, // Spread the car properties
+      }));
+
+      setAllCars(carsWithIDs);
     } catch (error) {
       console.log(error);
     } finally {

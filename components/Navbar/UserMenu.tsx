@@ -23,6 +23,22 @@ const UserMenu = ({ currentUser }: UserMenuProps) => {
     setIsOpen((value) => !value);
   }, []);
 
+  const cartButt = useCallback(() => {
+    if (!currentUser) {
+      return loginModal.onOpen();
+    }
+
+    // open cart page
+  }, [loginModal, currentUser]);
+
+  const resButt = useCallback(() => {
+    if (!currentUser) {
+      return loginModal.onOpen();
+    }
+
+    // open reservation page
+  }, [loginModal, currentUser]);
+
   return (
     <div className=" relative">
       <div className=" flex flex-row items-center gap-3 w-28">
@@ -41,7 +57,8 @@ const UserMenu = ({ currentUser }: UserMenuProps) => {
           <div className=" flex flex-col cursor-pointer  left-0">
             {currentUser ? (
               <>
-                <MenuItem onClick={() => {}} label="My Cart" />
+                <MenuItem onClick={cartButt} label="My Cart" />
+                <MenuItem onClick={resButt} label="My Reservations" />
                 <MenuItem onClick={() => {}} label="Contact Us" />
                 <hr />
                 <MenuItem onClick={() => signOut()} label="Log Out" />
