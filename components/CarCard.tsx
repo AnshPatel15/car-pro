@@ -1,8 +1,12 @@
 "use client";
+import useCars from "@/hooks/useCars";
 import { CarProps } from "@/types";
 import { calculateCarRent, generateCarImageUrl } from "@/utils";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { handleClientScriptLoad } from "next/script";
 import { useState } from "react";
+import { BiRupee } from "react-icons/bi";
 import CarDetails from "./CarDetails";
 import CustomButton from "./CustomButton";
 
@@ -11,11 +15,19 @@ interface CarCardProps {
 }
 
 export const CarCard = ({ car }: CarCardProps) => {
+  const router = useRouter();
   const { city_mpg, year, make, model, transmission, drive } = car;
 
   const [isOpen, setIsOpen] = useState(false);
 
   const carRent = calculateCarRent(city_mpg, year);
+
+  const selectedCarFunction = useCars((state) => state.setSelectedCar);
+
+  const handleClick = () => {
+    selectedCarFunction(car);
+    router.push(`/carPage?car=1`);
+  };
 
   return (
     <div className="car-card group">
@@ -25,7 +37,9 @@ export const CarCard = ({ car }: CarCardProps) => {
         </h2>
       </div>
       <p className="flex mt-6 text-[32px] font-extrabold">
-        <span className=" self-start text-[14px] font-semibold">Rs </span>
+        <span className=" self-start text-[14px] font-semibold">
+          <BiRupee size={25} />{" "}
+        </span>
         {carRent}
         <span className=" self-end text-[14px] font-medium">/day</span>
       </p>
@@ -68,7 +82,10 @@ export const CarCard = ({ car }: CarCardProps) => {
             containerStyles="w-full py-[16px] rounded-full bg-primary-blue"
             textStyles="text-white text-[14px] leading-[17px] font-bold"
             rightIcon="/right-arrow.svg"
-            handleClick={() => setIsOpen(true)}
+            // handleClick={() => setIsOpen(true)}
+            // handleClick={() => router.push(`/carDetails?carId=${car.car_id}`)}
+            handleClick={handleClick}
+            onClick={() => {}}
           />
         </div>
       </div>

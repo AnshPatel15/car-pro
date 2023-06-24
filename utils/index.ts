@@ -1,4 +1,5 @@
 import { CarProps, FilterProps } from "@/types";
+import { v4 as uuidv4 } from "uuid";
 
 export async function fetchCars(filters: FilterProps) {
   const { manufacturer, year, model, fuel, limit } = filters;
@@ -15,7 +16,12 @@ export async function fetchCars(filters: FilterProps) {
 
   const result = await response.json();
 
-  return result;
+  const carsWithIDs = result.map((car: any) => ({
+    carId: uuidv4(), // Generate a unique ID for each car object
+    ...car, // Spread the existing car properties
+  }));
+
+  return carsWithIDs;
 }
 
 export const calculateCarRent = (city_mpg: number, year: number) => {

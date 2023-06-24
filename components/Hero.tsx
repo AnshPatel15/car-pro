@@ -9,7 +9,7 @@ const Hero = () => {
   return (
     <div className="hero">
       <div className="flex-1 pt-36 padding-x ">
-        <h1 className="hero__title">
+        <h1 className="hero__title text-black">
           Find, book, or rent a car - Quickly and easily!
         </h1>
         <p className="hero__subtitle">
@@ -21,6 +21,7 @@ const Hero = () => {
           title="Explore Cars"
           containerStyles="bg-primary-blue text-white rounded-full mt-10"
           handleClick={handleScroll}
+          onClick={() => {}}
         />
       </div>
       <div className="hero__image-container">

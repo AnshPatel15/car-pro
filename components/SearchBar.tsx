@@ -4,8 +4,9 @@ import React, { useState } from "react";
 import { SearchManu } from "./";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { SearchBarProps } from "@/types";
 
-const SearchBar = ({ setManufacturer, setModel }) => {
+const SearchBar = ({ setManufacturer, setModel }: SearchBarProps) => {
   const [searchManufacturer, setSearchManufacturer] = useState("");
   const [searchModel, setSearchModel] = useState("");
   const router = useRouter();

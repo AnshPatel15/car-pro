@@ -20,6 +20,7 @@ const ShowMore = ({ pageNumber, isNext, setLimit }: ShowMoreProps) => {
           btnType="button"
           containerStyles="bg-primary-blue rounded-full text-white"
           handleClick={handleNavigation}
+          onClick={() => {}}
         />
       )}
     </div>
