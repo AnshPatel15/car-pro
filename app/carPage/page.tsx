@@ -1,4 +1,5 @@
 import ImageDiv from "@/components/carListing/ImageDiv";
+import ClientOnly from "@/components/ClientOnly";
 import { User } from "@prisma/client";
 import getCurrentUser from "../actions/getCurrentUser";
 import { getReservations } from "../actions/getReservations";
@@ -14,9 +15,11 @@ async function CarPage({ params }: { params: IParams }) {
   const reservations = await getReservations({ carId: restoredCarId });
   const currentUser = await getCurrentUser();
   return (
-    <main className="box-border max-w-7xl mx-auto p-8">
-      <ImageDiv reservations={reservations} currentUser={currentUser} />
-    </main>
+    <ClientOnly>
+      <main className="box-border max-w-7xl mx-auto p-8">
+        <ImageDiv reservations={reservations} currentUser={currentUser} />
+      </main>
+    </ClientOnly>
   );
 }
 

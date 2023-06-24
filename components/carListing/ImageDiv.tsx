@@ -1,7 +1,8 @@
 "use client";
-import { getReservations } from "@/app/actions/getReservations";
+
 import useCars from "@/hooks/useCars";
 import useLoginModal from "@/hooks/useLoginModal";
+
 import { calculateCarRent, generateCarImageUrl } from "@/utils";
 import { Reservation, User } from "@prisma/client";
 import axios from "axios";
@@ -34,6 +35,8 @@ const ImageDiv = ({ currentUser, reservations }: ImageDivProps) => {
   const carRent: any = calculateCarRent(car.city_mpg, car.year);
   const originalCarId = car?.carId; // Store the original carId value
   const formattedCarId = originalCarId ? originalCarId.replace(/-/g, "") : "";
+  const carModel: string = car.model;
+  const carMake: string = car.make;
 
   const restoredCarId = formattedCarId
     ? formattedCarId.replace(
@@ -176,7 +179,7 @@ const ImageDiv = ({ currentUser, reservations }: ImageDivProps) => {
       <div className="flex flex-col gap-4 lg:w-2/4 lg:mt-28 lg:p-5">
         <div>
           <h1 className=" text-3xl font-bold  capitalize p-4">
-            {car.make} {car.model}
+            {carMake} {carModel}
           </h1>
           <p className=" text-gray-600 p-3 text-left">
             Introducing our exceptional collection of vehicles, each offering a

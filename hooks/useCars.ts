@@ -1,3 +1,32 @@
+// import { create } from "zustand";
+
+// interface useCarsStore {
+//   selectedCar: any;
+//   cars: any[];
+//   setSelectedCar: (selectedCar: any) => void;
+//   setCars: (cars: any[]) => void;
+// }
+
+// const useCars = create<useCarsStore>((set) => {
+//   // Retrieve the selectedCar from local storage, if it exists
+//   const selectedCarFromStorage = localStorage.getItem("selectedCar");
+
+//   return {
+//     cars: [],
+//     selectedCar: selectedCarFromStorage
+//       ? JSON.parse(selectedCarFromStorage)
+//       : {},
+//     setCars: (cars) => set((state) => ({ ...state, cars })),
+//     setSelectedCar: (selectedCar) => {
+//       // Save the selectedCar to local storage
+//       localStorage.setItem("selectedCar", JSON.stringify(selectedCar));
+//       set((state) => ({ ...state, selectedCar }));
+//     },
+//   };
+// });
+
+// export default useCars;
+
 import { create } from "zustand";
 
 interface useCarsStore {
@@ -8,8 +37,8 @@ interface useCarsStore {
 }
 
 const useCars = create<useCarsStore>((set) => {
-  // Retrieve the selectedCar from local storage, if it exists
-  const selectedCarFromStorage = localStorage.getItem("selectedCar");
+  const selectedCarFromStorage =
+    typeof window !== "undefined" ? localStorage.getItem("selectedCar") : null;
 
   return {
     cars: [],
@@ -18,8 +47,9 @@ const useCars = create<useCarsStore>((set) => {
       : {},
     setCars: (cars) => set((state) => ({ ...state, cars })),
     setSelectedCar: (selectedCar) => {
-      // Save the selectedCar to local storage
-      localStorage.setItem("selectedCar", JSON.stringify(selectedCar));
+      if (typeof window !== "undefined") {
+        localStorage.setItem("selectedCar", JSON.stringify(selectedCar));
+      }
       set((state) => ({ ...state, selectedCar }));
     },
   };
