@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "builds": [{ "src": "vercel-builder.bat", "use": "@vercel/node" }],
+  "build": {
+    "env": {
+      "CI": "true"
+    }
+  }
+}

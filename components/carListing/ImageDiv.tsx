@@ -77,7 +77,11 @@ const ImageDiv = ({ currentUser, reservations }: ImageDivProps) => {
 
   const [activeImage, setActiveImage] = useState(images.img1);
 
-  const addCartButton = useCallback(() => {
+  const addCartButton = () => {
+    router.push("/cartPage");
+  };
+
+  const reserveButton = useCallback(() => {
     if (!currentUser) {
       return loginModal.onOpen();
     }
