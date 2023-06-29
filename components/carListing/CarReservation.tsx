@@ -43,7 +43,7 @@ const CarReservation = ({
       />
       <hr />
       <div className=" p-4">
-        <ButtonTwo disabled={disabled} label="Reserve" onClick={onSubmit} />
+        <ButtonTwo disabled={disabled} label="Add to cart" onClick={onSubmit} />
       </div>
       <div className=" p-4 flex flex-row items-center justify-between font-semibold text-lg">
         <div>Total</div>

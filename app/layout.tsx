@@ -7,6 +7,7 @@ import ToasterProvider from "@/providers/ToasterProvider";
 import "./globals.css";
 import LoginModal from "@/components/modals/LoginModal";
 import getCurrentUser from "./actions/getCurrentUser";
+import { DesiredCarsProvider } from "@/context/DesiredCarsContext";
 
 export const metadata = {
   title: "Car Show",
@@ -24,12 +25,14 @@ export default async function RootLayout({
     <html lang="en">
       <body className="relative">
         <ClientOnly>
-          <ToasterProvider />
-          <LoginModal />
-          <RegisterModal />
-          <Navbar currentUser={currentUser} />
-          {children}
-          <Footer />
+          <DesiredCarsProvider>
+            <ToasterProvider />
+            <LoginModal />
+            <RegisterModal />
+            <Navbar currentUser={currentUser} />
+            {children}
+            <Footer />
+          </DesiredCarsProvider>
         </ClientOnly>
       </body>
     </html>

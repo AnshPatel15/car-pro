@@ -1,5 +1,6 @@
 "use client";
 
+import { DesiredCarsContext } from "@/context/DesiredCarsContext";
 import useCars from "@/hooks/useCars";
 import useLoginModal from "@/hooks/useLoginModal";
 
@@ -10,7 +11,7 @@ import { eachDayOfInterval } from "date-fns";
 import { differenceInCalendarDays } from "date-fns";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Range } from "react-date-range";
 import { toast } from "react-hot-toast";
 import CarReservation from "./CarReservation";
@@ -71,6 +72,8 @@ const ImageDiv = ({ currentUser, reservations }: ImageDivProps) => {
   const [totalPrice, setTotalPrice] = useState(carRent);
   const [dateRange, setDateRange] = useState<Range>(initialDateRange);
 
+  const { desiredCars, setDesiredCars } = useContext(DesiredCarsContext);
+
   const [images, setImages] = useState({
     img1: generateCarImageUrl(car),
     img2: generateCarImageUrl(car, "29"),
@@ -79,10 +82,6 @@ const ImageDiv = ({ currentUser, reservations }: ImageDivProps) => {
   });
 
   const [activeImage, setActiveImage] = useState(images.img1);
-
-  const addCartButton = () => {
-    router.push("/cartPage");
-  };
 
   const reserveButton = useCallback(() => {
     if (!currentUser) {
@@ -114,6 +113,28 @@ const ImageDiv = ({ currentUser, reservations }: ImageDivProps) => {
       });
   }, [currentUser, loginModal, totalPrice, dateRange, router]);
 
+  const addToCartButton = () => {
+    // Create a new car object with the selected details
+    const newCar = {
+      model: carModel,
+      make: carMake,
+      year: car.year,
+      totalPrice: parseInt(totalPrice),
+      startDate: dateRange.startDate,
+      endDate: dateRange.endDate,
+      carId: formattedCarId,
+    };
+
+    // Update the desiredCars array by adding the new car
+    setDesiredCars((prevDesiredCars: any) => [...prevDesiredCars, newCar]);
+    // Reset the selected date range
+    setDateRange(initialDateRange);
+
+    // Show a success message
+    toast.success("Car added to cart");
+    router.push("/cartPage");
+  };
+
   useEffect(() => {
     if (dateRange.startDate && dateRange.endDate) {
       const dayCount = differenceInCalendarDays(
@@ -131,13 +152,13 @@ const ImageDiv = ({ currentUser, reservations }: ImageDivProps) => {
 
   return (
     <div className="flex flex-col justify-between lg:flex-row gap-4 md:items-center lg:items-start">
-      <div className=" my-28 w-full h-full flex flex-col gap-6  md:w-2/3 lg:w-2/4">
+      <div className=" w-full h-full flex flex-col gap-6  md:w-2/3 lg:w-2/4">
         <Image
           src={activeImage}
           alt=""
           width={600}
           height={300}
-          className="aspect-square object-contain rounded-xl bg-gray-100 self-center"
+          className=" mt-28 aspect-square object-contain rounded-xl bg-gray-100 self-center"
         />
 
         <div className=" flex flex-row justify-between ">
@@ -212,13 +233,13 @@ const ImageDiv = ({ currentUser, reservations }: ImageDivProps) => {
             satisfaction.
           </p>
         </div>
-        <div className=" order-first mb-10 md:order-last md:col-span-3">
+        <div className=" order-last mb-10 md:order-last md:col-span-3">
           <CarReservation
             price={carRent}
             totalPrice={totalPrice}
             onChangeDate={(value) => setDateRange(value)}
             dateRange={dateRange}
-            onSubmit={addCartButton}
+            onSubmit={addToCartButton}
             disabled={isLoading}
             disabledDates={disabledDates}
           />

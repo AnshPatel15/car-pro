@@ -9,6 +9,7 @@ interface EmptyStateProps {
   subtitle?: string;
   showReset?: boolean;
   onRemoveFilters?: () => void;
+  buttonLabel?: string;
 }
 
 const EmptyState = ({
@@ -16,6 +17,7 @@ const EmptyState = ({
   subtitle = "Try changing some of your filters",
   showReset,
   onRemoveFilters,
+  buttonLabel,
 }: EmptyStateProps) => {
   const router = useRouter();
   return (
@@ -25,7 +27,7 @@ const EmptyState = ({
         {showReset && (
           <ButtonTwo
             outline
-            label="Remove all filters"
+            label={buttonLabel ? buttonLabel : "Remove all filters"}
             //TODO onClick={() => router.push("/")} add when converted back to server side
             onClick={onRemoveFilters}
           />

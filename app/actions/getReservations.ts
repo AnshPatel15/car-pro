@@ -108,11 +108,28 @@ export async function getReservations(params: IParams) {
       orderBy: {
         createdAt: "desc",
       },
+      select: {
+        totalPrice: true,
+        carId: true,
+      },
     });
 
     return reservations;
   } catch (error: any) {
     console.error("Error fetching reservations:", error);
     return []; // Return an empty array when an error occurs
+  }
+}
+
+export async function getTotalPriceByCarId(carId: string): Promise<number> {
+  try {
+    const reservations = await getReservations({ carId });
+    if (reservations.length > 0) {
+      return reservations[0].totalPrice;
+    }
+    return 0;
+  } catch (error: any) {
+    console.error("Error fetching total price:", error);
+    return 0; // Return 0 when an error occurs
   }
 }
