@@ -21,6 +21,7 @@ model User {
 
   accounts     Account[]
   reservations Reservation[]
+  Payment      Payment[]
 
   @@map("users")
 }
@@ -55,4 +56,19 @@ model Reservation {
   isBlocked  Boolean  @default(false) // Add the isBlocked field
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  Payment Payment[]
+}
+
+model Payment {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String   @db.ObjectId
+  reservationId String?  @db.ObjectId
+  amount        Int
+  createdAt     DateTime @default(now())
+
+  user        User         @relation(fields: [userId], references: [id])
+  reservation Reservation? @relation(fields: [reservationId], references: [id])
+
+  @@map("payments")
 }
