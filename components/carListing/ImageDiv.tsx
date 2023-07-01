@@ -35,22 +35,14 @@ const ImageDiv = ({ currentUser, reservations }: ImageDivProps) => {
   const car = selectedCar || {};
   const carRent: any = calculateCarRent(car.city_mpg, car.year);
   const originalCarId = car?.carId; // Store the original carId value
-  const formattedCarId = originalCarId ? originalCarId.replace(/-/g, "") : "";
   const carModel: string = car.model;
   const carMake: string = car.make;
-
-  const restoredCarId = formattedCarId
-    ? formattedCarId.replace(
-        /^(.{8})(.{4})(.{4})(.{4})(.{12})$/,
-        "$1-$2-$3-$4-$5"
-      )
-    : "";
 
   const disabledDates = useMemo(() => {
     let dates: Date[] = [];
 
     reservations?.forEach((reservation) => {
-      if (reservation.carId === formattedCarId) {
+      if (reservation.carId === originalCarId) {
         // Filter reservations based on carId
         const range = eachDayOfInterval({
           start: new Date(reservation.startDate),
@@ -62,11 +54,9 @@ const ImageDiv = ({ currentUser, reservations }: ImageDivProps) => {
     });
 
     return dates;
-  }, [reservations, formattedCarId]);
+  }, [reservations, originalCarId]);
 
-  console.log(restoredCarId); // Output the restored carId value
-
-  console.log(car.carId, formattedCarId);
+  console.log(car.carId, originalCarId);
 
   const [isLoading, setIsLoading] = useState(false);
   const [totalPrice, setTotalPrice] = useState(carRent);
@@ -96,7 +86,7 @@ const ImageDiv = ({ currentUser, reservations }: ImageDivProps) => {
         totalPrice: parseInt(totalPrice),
         startDate: dateRange.startDate,
         endDate: dateRange.endDate,
-        carId: formattedCarId,
+        carId: originalCarId,
       })
       .then(() => {
         toast.success("Car Reserved");
@@ -122,7 +112,7 @@ const ImageDiv = ({ currentUser, reservations }: ImageDivProps) => {
       totalPrice: parseInt(totalPrice),
       startDate: dateRange.startDate,
       endDate: dateRange.endDate,
-      carId: formattedCarId,
+      carId: originalCarId,
     };
 
     // Update the desiredCars array by adding the new car
@@ -130,8 +120,30 @@ const ImageDiv = ({ currentUser, reservations }: ImageDivProps) => {
     // Reset the selected date range
     setDateRange(initialDateRange);
 
-    // Show a success message
-    toast.success("Car added to cart");
+    setIsLoading(true);
+
+    axios
+      .post("/api/cartItem", {
+        carId: originalCarId,
+        userId: currentUser?.id,
+        totalPrice: parseInt(totalPrice),
+        startDate: dateRange.startDate,
+        endDate: dateRange.endDate,
+        make: carMake,
+        model: carModel,
+        year: car.year,
+      })
+      .then(() => {
+        toast.success("Car added to cart successfully.");
+      })
+      .catch((error) => {
+        console.error("Error:", error); // Log the error
+        toast.error("Something went wrong.");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+
     router.push("/cartPage");
   };
 

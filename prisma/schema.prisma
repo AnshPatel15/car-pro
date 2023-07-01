@@ -22,6 +22,7 @@ model User {
   accounts     Account[]
   reservations Reservation[]
   Payment      Payment[]
+  CartItem     CartItem[]
 
   @@map("users")
 }
@@ -71,4 +72,20 @@ model Payment {
   reservation Reservation? @relation(fields: [reservationId], references: [id])
 
   @@map("payments")
+}
+
+model CartItem {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  make       String?
+  model      String?
+  year       Int?
+  userId     String   @db.ObjectId
+  carId      String?
+  startDate  DateTime
+  endDate    DateTime
+  totalPrice Int
+  createdAt  DateTime @default(now())
+  // Add any other fields related to the cart item
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

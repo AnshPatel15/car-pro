@@ -1,6 +1,6 @@
 "use client";
 import useCars from "@/hooks/useCars";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useId, useState } from "react";
 import { generateCarImageUrl } from "@/utils";
 import Image from "next/image";
 import { DesiredCarsContext } from "@/context/DesiredCarsContext";
@@ -8,6 +8,8 @@ import ButtonTwo from "../ButtonTwo";
 import EmptyState from "../EmptyState";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { CartItem, Prisma, User } from "@prisma/client";
+import { toast } from "react-hot-toast";
 
 declare global {
   interface Window {
@@ -15,16 +17,67 @@ declare global {
   }
 }
 
-export const CartCard = () => {
+interface CartCardProps {
+  currentUser: User | null;
+  cartItems: any;
+}
+
+interface DesiredCar {
+  id: string;
+  userId: string;
+  carId: string | null;
+  startDate: Date;
+  endDate: Date;
+  totalPrice: number;
+  createdAt: Date;
+  city_mpg: number; // Add additional properties here
+  class: string;
+  combination_mpg: number;
+  cylinders: number;
+  displacement: number; // Add missing properties here
+  drive: string;
+  fuel_type: string;
+  highway_mpg: number;
+  make: string;
+  model: string;
+  transmission: string;
+  year: number;
+}
+
+export const CartCard = ({ currentUser, cartItems }: CartCardProps) => {
   const router = useRouter();
   const selectedCar = useCars((state) => state.selectedCar);
   const car = selectedCar || {};
   const { desiredCars, setDesiredCars } = useContext(DesiredCarsContext);
 
-  const removeCartCar = (index: number) => () => {
+  useEffect(() => {
+    if (cartItems) {
+      setDesiredCars(cartItems);
+    } else {
+      setDesiredCars([]);
+    }
+  }, [cartItems]);
+
+  console.log("desired ", desiredCars);
+
+  console.log("CartItems", cartItems);
+
+  const removeCartCar = (index: number, data: any) => () => {
     const updatedCars = [...desiredCars];
     updatedCars.splice(index, 1);
     setDesiredCars(updatedCars);
+
+    console.log("Deleting cart item:", data);
+
+    axios
+      .delete(`/api/deleteCartItem`)
+      .then((res) => {
+        console.log("Entry deleted successfully:", res);
+        toast.success("Entry Removed");
+      })
+      .catch((err) => {
+        console.log("Something went wrong:", err);
+      });
   };
 
   const loadScript = (src: any) => {
@@ -81,11 +134,19 @@ export const CartCard = () => {
 
         setDesiredCars([]);
 
-        // if (response) {
-        //   axios.post("/api/payments");
-        // }
-
-        return success;
+        if (response) {
+          axios
+            .post("/api/payments", {
+              amount: response.amount,
+              paymentId: response.razorpay_payment_id,
+            })
+            .then((res) => {
+              console.log(res.data);
+            })
+            .catch((error) => {
+              console.log("There was an error:", error);
+            });
+        }
       },
       prefill: {
         name: "Car Hub",
@@ -148,9 +209,12 @@ export const CartCard = () => {
               </div>
             )}
             <div className="flex">Total: {cartCar.totalPrice}</div>
-            <div className="flex flex-row justify-between">
+            <div
+              key={cartCar.id.toString()}
+              className="flex flex-row justify-between"
+            >
               <button
-                onClick={removeCartCar(index)}
+                onClick={removeCartCar(index, cartCar)}
                 className="flex flex-row justify-between"
               >
                 x

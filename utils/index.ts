@@ -17,7 +17,7 @@ export async function fetchCars(filters: FilterProps) {
   const result = await response.json();
 
   const carsWithIDs = result.map((car: any) => ({
-    carId: uuidv4(), // Generate a unique ID for each car object
+    carId: uuidv4().replace(/-/g, ""), // Generate a unique ID for each car object
     ...car, // Spread the existing car properties
   }));
 
